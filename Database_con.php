@@ -33,7 +33,62 @@ class DatabaseCon{
 
     }
 
+    public function getError(){
+        return $this->error_message;
+    }
+
+    public function isConnected(){
+        return $this->dbConnection;
+    }
     
+    public function query($sql){
+        $this->stmt = $this->connection->prepare($sql);
+    }
+
+    public function execute(){
+       return $this->stmt->execute();
+    }
+
+    public function fetch($sql){
+        $this->stmt->execute();
+        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function rowCount(){
+        $this->stmt->execute();
+        return $this->stmt->rowCount();
+    }
+
+    public function singleFetch(){
+        $this->stmt->execute();
+        return $this->stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function bind($param, $value , $type = null){
+        if(is_null($type)){
+            switch(true){
+                case is_int($value):
+                    $type = PDO::PARAM_INT;
+                    break;
+                case is_bool($value):
+                    $type = PDO::PARAM_BOOL;
+                    break;
+                case is_null($value):
+                    $type = PDO::PARAM_NULL;
+                    break;
+                default:
+                $type =  PDO::PARAM_STR;
+            }
+        }
+
+        $this->stmt->bindValue($param,$value,$type);
+    }
+
+    
+
+
+
+
 
 
 
